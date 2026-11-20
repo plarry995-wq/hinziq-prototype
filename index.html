@@ -175,4 +175,95 @@ function downloadCSV(){let rows=[['Product','Reference','Applicant','Category','
 document.getElementById('role').addEventListener('change',e=>{document.getElementById('avatar').textContent=e.target.value.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase()});
 renderProducts();renderDashboard();
 </script>
+<!-- HINZIQ RICA Monitor: interactive evidence inspection enhancement -->
+<style>
+#evidenceModal{position:fixed;inset:0;background:#071e17b8;z-index:30;display:none;align-items:center;justify-content:center;padding:20px}
+#evidenceModal.open{display:flex}
+#evidenceModal .evidence-dialog{background:#fff;width:min(680px,100%);max-height:88vh;overflow:auto;border-radius:16px;padding:24px;box-shadow:0 24px 70px #001b1280}
+#evidenceModal .evidence-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:1px solid #e7eee9;padding-bottom:14px;margin-bottom:17px}
+#evidenceModal h2{font:800 19px Manrope;color:#073b2d;margin:0 0 5px}
+#evidenceModal p{font-size:12px;color:#718078;line-height:1.6;margin:5px 0}
+#evidenceModal .evidence-close{border:1px solid #e7eee9;background:#fff;border-radius:8px;padding:8px 11px;color:#073b2d}
+#evidenceModal .evidence-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+#evidenceModal .evidence-meta div{background:#f5f8f5;border-radius:9px;padding:11px}
+#evidenceModal .evidence-meta small{display:block;color:#718078;font-size:9px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+#evidenceModal .evidence-meta b{font-size:12px;color:#172820}
+#evidenceModal .evidence-section{border-top:1px solid #e7eee9;padding-top:13px;margin-top:13px}
+#evidenceModal .evidence-section h3{font:700 12px Manrope;color:#073b2d;margin:0 0 7px}
+#evidenceModal .evidence-note{background:#f0f7e9;border:1px solid #deebd2;padding:12px;border-radius:9px;font-size:11px;line-height:1.6;color:#4d6a35}
+#monitor .evidence-row{cursor:pointer}
+#monitor .evidence-row:hover{background:#f5f8f5}
+#monitor .evidence-row:focus{outline:2px solid #087a4b;outline-offset:-2px}
+@media(max-width:520px){#evidenceModal .evidence-meta{grid-template-columns:1fr}#evidenceModal .evidence-dialog{padding:18px}}
+</style>
+
+<div id="evidenceModal" role="dialog" aria-modal="true" aria-labelledby="evidenceModalTitle">
+ <div class="evidence-dialog">
+  <div class="evidence-head">
+   <div><div class="eyebrow">RICA oversight · Evidence record</div><h2 id="evidenceModalTitle">Evidence details</h2><p id="evidenceModalSubtitle">Select a record to inspect its details.</p></div>
+   <button class="evidence-close" type="button" onclick="closeEvidenceModal()">Close ✕</button>
+  </div>
+  <div class="evidence-meta" id="evidenceModalMeta"></div>
+  <div class="evidence-section"><h3>Review notes</h3><p id="evidenceModalNotes"></p></div>
+  <div class="evidence-section"><h3>Evidence preview</h3><div class="evidence-note" id="evidenceModalPreview">This demonstration record does not contain an attached source file. In a production system, the authorised reviewer would open the submitted file here.</div></div>
+  <div class="evidence-section"><h3>Oversight history</h3><p id="evidenceModalHistory"></p></div>
+  <div class="evidence-note" style="margin-top:16px">Demonstration only: these are fictional records. Opening this panel does not validate evidence or change an official trial status.</div>
+ </div>
+</div>
+
+<script>
+(function(){
+ const evidenceDetails = [
+  {
+   notes:"Growth observation submitted for the Kayonza demonstration trial. A reviewer should check the observation date, plot identifier, crop growth stage, measurement units and consistency with the approved protocol.",
+   preview:"Growth observation summary · No measurement sheet or original attachment is stored in this visual prototype.",
+   history:"19 Nov 2026 — Submitted by Jean Claude Ndayisaba, Field Officer. Awaiting authorised review."
+  },
+  {
+   notes:"Site photograph submitted as supporting field evidence. The reviewer should confirm the site, plot, capture date and relationship to the relevant observation. The original image should be retained with its metadata.",
+   preview:"Photograph attachment not available in this demonstration dataset. In the operational platform, this area will display the original uploaded photograph and its file details.",
+   history:"19 Nov 2026 — Submitted by Diane Uwase, Field Officer. Marked for review."
+  },
+  {
+   notes:"Protocol deviation reported for scientific assessment. The reviewer should compare the reported deviation with the approved protocol, assess its potential impact on trial integrity and record the required corrective action.",
+   preview:"Deviation report attachment not available in this demonstration dataset. A production workflow should retain the submitted report and any supporting correspondence.",
+   history:"18 Nov 2026 — Submitted by Emmanuel Niyonzima, RAB Scientist. Awaiting RAB scientific review."
+  }
+ ];
+ window.closeEvidenceModal=function(){
+  const modal=document.getElementById("evidenceModal");
+  if(modal) modal.classList.remove("open");
+ };
+ function openEvidenceModal(row,index){
+  const cells=Array.from(row.cells).map(c=>c.innerText.trim());
+  const title=cells[0]||"Evidence record";
+  const modal=document.getElementById("evidenceModal");
+  document.getElementById("evidenceModalTitle").textContent=title;
+  document.getElementById("evidenceModalSubtitle").textContent="Select and inspect the submitted record details.";
+  const labels=["Evidence type","Trial reference","Submitted by","Submission date","Validation status"];
+  document.getElementById("evidenceModalMeta").innerHTML=cells.map((value,i)=>`<div><small>${labels[i]||"Record detail"}</small><b>${value.replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}</b></div>`).join("");
+  const detail=evidenceDetails[index]||evidenceDetails[0];
+  document.getElementById("evidenceModalNotes").textContent=detail.notes;
+  document.getElementById("evidenceModalPreview").textContent=detail.preview;
+  document.getElementById("evidenceModalHistory").textContent=detail.history;
+  modal.classList.add("open");
+ }
+ const rows=document.querySelectorAll("#monitor .card table tbody tr");
+ rows.forEach((row,index)=>{
+  row.classList.add("evidence-row");
+  row.setAttribute("tabindex","0");
+  row.setAttribute("role","button");
+  row.setAttribute("aria-label","Inspect "+(row.cells[0]?.innerText||"evidence record"));
+  row.setAttribute("title","Click to inspect this evidence record");
+  row.addEventListener("click",()=>openEvidenceModal(row,index));
+  row.addEventListener("keydown",event=>{
+   if(event.key==="Enter"||event.key===" "){event.preventDefault();openEvidenceModal(row,index);}
+  });
+ });
+ const modal=document.getElementById("evidenceModal");
+ modal.addEventListener("click",event=>{if(event.target===modal)closeEvidenceModal();});
+ document.addEventListener("keydown",event=>{if(event.key==="Escape")closeEvidenceModal();});
+})();
+</script>
+<!-- End HINZIQ RICA Monitor enhancement -->
 </body></html>
