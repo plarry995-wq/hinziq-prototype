@@ -266,4 +266,81 @@ renderProducts();renderDashboard();
 })();
 </script>
 <!-- End HINZIQ RICA Monitor enhancement -->
+ <!-- HINZIQ RICA Assess: interactive assessment queue enhancement -->
+<style>
+#assess .assessment-queue-row{cursor:pointer}
+#assess .assessment-queue-row:hover{background:#f5f8f5}
+#assess .assessment-queue-row:focus{outline:2px solid #087a4b;outline-offset:-2px}
+#assess .assessment-selected-record{background:#f0f7e9;border:1px solid #deebd2;color:#4d6a35;border-radius:10px;padding:12px 14px;margin:0 0 15px;font-size:11px;line-height:1.6}
+#assess .assessment-selected-record strong{color:#073b2d}
+</style>
+<script>
+(function(){
+  const assess=document.getElementById("assess");
+  if(!assess) return;
+  const records=[
+    {name:"AgroGrow X",ref:"HZ-2026-001",applicant:"GreenFields Rwanda Ltd.",category:"Soil amendment",stage:"Efficacy trial",queueStatus:"Officer review"},
+    {name:"SoilPlus",ref:"HZ-2026-002",applicant:"AgriNova Ltd.",category:"Fertiliser",stage:"Laboratory testing",queueStatus:"Documents received"},
+    {name:"CropShield 20",ref:"HZ-2026-003",applicant:"HarvestCare Ltd.",category:"Crop protection",stage:"Document assessment",queueStatus:"Awaiting documents"}
+  ];
+  const queueRows=assess.querySelectorAll(".grid.two .card:first-child tbody tr");
+  const formCard=Array.from(assess.querySelectorAll(".card")).find(card=>card.querySelector("h2")?.textContent.trim()==="Record assessment outcome");
+  if(!formCard) return;
+  const selects=formCard.querySelectorAll("select");
+  const productSelect=selects[0];
+  const statusSelect=selects[1];
+  const formGrid=formCard.querySelector(".form-grid");
+  if(!productSelect||!statusSelect||!formGrid) return;
+  productSelect.innerHTML=records.map(record=>
+    `<option value="${record.ref}">${record.ref} · ${record.name}</option>`
+  ).join("");
+  let info=document.getElementById("assessmentSelectedRecord");
+  if(!info){
+    info=document.createElement("div");
+    info.id="assessmentSelectedRecord";
+    info.className="assessment-selected-record";
+    formGrid.parentNode.insertBefore(info,formGrid);
+  }
+  function showRecord(record,scrollToForm){
+    if(!record) return;
+    productSelect.value=record.ref;
+    info.innerHTML="<strong>"+record.name+" · "+record.ref+"</strong><br>"+
+      "Applicant: "+record.applicant+"<br>"+
+      "Category: "+record.category+" · Current stage: "+record.stage+"<br>"+
+      "Queue status: "+record.queueStatus;
+    queueRows.forEach(row=>{
+      const isSelected=row.cells[1]?.textContent.trim()===record.ref;
+      row.style.background=isSelected?"#f0f7e9":"";
+      row.setAttribute("aria-pressed",isSelected?"true":"false");
+    });
+    if(scrollToForm){
+      formCard.scrollIntoView({behavior:"smooth",block:"center"});
+      info.setAttribute("tabindex","-1");
+      info.focus({preventScroll:true});
+    }
+  }
+  queueRows.forEach((row,index)=>{
+    const record=records[index];
+    if(!record) return;
+    row.classList.add("assessment-queue-row");
+    row.setAttribute("tabindex","0");
+    row.setAttribute("role","button");
+    row.setAttribute("aria-label","Open assessment for "+record.name);
+    row.setAttribute("title","Select this product to load its assessment record");
+    row.addEventListener("click",()=>showRecord(record,true));
+    row.addEventListener("keydown",event=>{
+      if(event.key==="Enter"||event.key===" "){
+        event.preventDefault();
+        showRecord(record,true);
+      }
+    });
+  });
+  productSelect.addEventListener("change",()=>{
+    const record=records.find(item=>item.ref===productSelect.value);
+    showRecord(record,false);
+  });
+  showRecord(records[0],false);
+})();
+</script>
+<!-- End HINZIQ RICA Assess enhancement -->
 </body></html>
