@@ -31,7 +31,7 @@
  <div class="nav-label">WORKSPACE</div>
  <nav class="nav">
   <button class="active" data-page="dashboard"><span class="ico">◫</span> Executive dashboard</button>
-  <button data-page="applications"><span class="ico">▤</span> Product applications</button>
+ <button data-page="applications"><span class="ico">▤</span> IREMBO Application Intake</button>
   <button data-page="assess"><span class="ico">✓</span> RICA Assess</button>
   <button data-page="labs"><span class="ico">⚗</span> RSB Labs</button>
   <button data-page="trials"><span class="ico">♧</span> RAB Trials</button>
@@ -80,9 +80,9 @@
 </section>
 
 <section class="page" id="applications">
- <div class="welcome"><div><div class="eyebrow">Digital product dossier</div><h1>Product applications</h1><p>A single traceable record follows each product through its evaluation journey.</p></div><button class="btn" onclick="document.getElementById('newApp').style.display='block'">＋ Register product</button></div>
+ <div class="welcome"><div><div class="eyebrow">Digital product dossier</div><h1>IREMBO Application Intake</h1><p>A single traceable record follows each product through its evaluation journey.</p></div><button class="btn" onclick="document.getElementById('newApp').style.display='block'">＋ Simulate IREMBO handover</button></div>
  <div class="notice">Each demonstration product has a unique HINZIQ reference. Supporting documents and evidence should be linked to the same dossier throughout the workflow.</div>
- <div class="card" id="newApp" style="display:none;margin-bottom:16px"><div class="section-head"><h2>Register a demonstration product</h2><button class="btn secondary small" onclick="this.closest('.card').style.display='none'">Close</button></div><div class="form-grid"><div class="field"><label>Product name</label><input id="appName" placeholder="e.g. CropShield 20"></div><div class="field"><label>Applicant / manufacturer</label><input id="applicant" placeholder="Organisation name"></div><div class="field"><label>Product category</label><select id="category"><option>Fertiliser / soil amendment</option><option>Agrochemical</option><option>Biostimulant</option><option>Other agricultural input</option></select></div><div class="field"><label>Crop / intended use</label><input id="crop" placeholder="e.g. Maize"></div></div><button class="btn" onclick="addProduct()">Save demonstration record</button></div>
+ <div class="card" id="newApp" style="display:none;margin-bottom:16px"><div class="section-head"><h2>Simulate IREMBO application handover</h2><button class="btn secondary small" onclick="this.closest('.card').style.display='none'">Close</button></div><div class="form-grid"><div class="field"><label>Product name</label><input id="appName" placeholder="e.g. CropShield 20"></div><div class="field"><label>Applicant / Company</label><input id="applicant" placeholder="Organisation name"></div><div class="field"><label>Product category</label><select id="category"><option>Fertiliser / soil amendment</option><option>Agrochemical</option><option>Biostimulant</option><option>Other agricultural input</option></select></div><div class="field"><label>Crop / intended use</label><input id="crop" placeholder="e.g. Maize"></div></div><button class="btn" onclick="addProduct()">Save demonstration record</button></div>
  <div class="toolbar"><input class="search" id="productSearch" placeholder="Search product, applicant or reference…" oninput="renderProducts()"><select class="role" id="stageFilter" onchange="renderProducts()"><option value="">All stages</option><option>Document assessment</option><option>Laboratory testing</option><option>Efficacy trial</option><option>Final review</option><option>Decision recorded</option></select></div>
  <div class="card"><div class="table-wrap"><table><thead><tr><th>Product / reference</th><th>Applicant</th><th>Category</th><th>Evaluation stage</th><th>Status</th><th>Record</th></tr></thead><tbody id="productRows"></tbody></table></div></div>
 </section>
