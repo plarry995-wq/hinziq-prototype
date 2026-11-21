@@ -163,7 +163,7 @@ const products=[
  {name:"CropShield 20",ref:"HZ-2026-003",applicant:"HarvestCare Ltd.",category:"Crop protection",stage:"Document assessment",status:"Officer review"},
  {name:"BioRoot",ref:"HZ-2026-009",applicant:"BioSolutions Rwanda",category:"Biostimulant",stage:"Decision recorded",status:"Demo decision"}
 ];
-const pages={dashboard:"Executive dashboard",applications:"Product applications",assess:"RICA Assess",labs:"RSB Labs",trials:"RAB Trials",monitor:"RICA Monitor",knowledge:"Knowledge Hub",reports:"Government reports",decisions:"Regulatory decisions",settings:"Administration"};
+const pages={dashboard:"Executive dashboard",applications:"IREMBO Application Intake",assess:"RICA Assess",labs:"RSB Labs",trials:"RAB Trials",monitor:"RICA Monitor",knowledge:"Knowledge Hub",reports:"Government reports",decisions:"Regulatory decisions",settings:"Administration"};
 function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));document.getElementById('crumb').textContent=pages[id];document.getElementById('sidebar').classList.remove('open');window.scrollTo(0,0)}
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
 function statusClass(s){return s.includes('Ongoing')||s.includes('Demo decision')?'green':s.includes('review')||s.includes('progress')?'amber':'blue'}
